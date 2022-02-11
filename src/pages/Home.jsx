@@ -1,14 +1,20 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import AddNote from '../components/AddNote';
+import Alert from '../components/Alert';
 import ViewNotes from '../components/ViewNotes';
+import noteContext from '../contextAPI/Notes/noteContext';
 
 const Home = () => {
-
+    const { alert } = useContext(noteContext);
+    console.log(alert);
     return (
-        <div className="container">
-            <AddNote />
-            <ViewNotes />
-        </div>
+        <>
+            <Alert alert={alert} />
+            <div className="container">
+                <AddNote />
+                <ViewNotes />
+            </div>
+        </>
     )
 }
 

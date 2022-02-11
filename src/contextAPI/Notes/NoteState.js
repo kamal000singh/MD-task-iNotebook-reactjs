@@ -3,6 +3,16 @@ import NoteContext from './noteContext'
 const url = 'http://localhost:5000/api/v1';
 const NoteState = (props) => {
     const [notes, setNotes] = useState([])
+    const [alert, setAlert] = useState(null);
+    const showAlert = (message, type) => {
+        setAlert({
+            msg: message,
+            type: type
+        })
+        setTimeout(() => {
+            setAlert(null);
+        }, 2000);
+    }
     const getNotes = async () => {
         const response = await fetch(`${url}/note/fetchallnotes`, {
             method: 'GET',
@@ -24,6 +34,7 @@ const NoteState = (props) => {
             body: JSON.stringify(newNote),
         })
         getNotes();
+        showAlert("Add New Node successfully", "success")
 
 
     }
@@ -36,9 +47,11 @@ const NoteState = (props) => {
             },
         })
         getNotes();
+        showAlert("Node delete successfully", "danger")
     }
     const updateNote = async ({ id, title, description, tag }) => {
-        const response = await fetch(`${url}/note/updatenote/${id}`, {
+        console.log("update : " + title, description, tag);
+        await fetch(`${url}/note/updatenote/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,21 +59,23 @@ const NoteState = (props) => {
             },
             body: JSON.stringify({ title, description, tag }),
         })
-        const json = response.json();
+        getNotes();
+        showAlert("Update Node successfully", "primary")
+        // const json = response.json();
 
-        for (let i = 0; i < notes.length; i++) {
-            const element = notes[i];
-            if (element._id === id) {
-                element.title = title;
-                element.description = description;
-                element.tag = tag;
+        // for (let i = 0; i < notes.length; i++) {
+        //     const element = notes[i];
+        //     if (element._id === id) {
+        //         element.title = title;
+        //         element.description = description;
+        //         element.tag = tag;
 
-            }
+        //     }
 
-        }
+        // }
     }
     return (
-        <NoteContext.Provider value={{ notes, addNewNote, deleteNote, updateNote, getNotes }}>
+        <NoteContext.Provider value={{ notes, addNewNote, deleteNote, updateNote, getNotes, alert }}>
             {props.children}
         </NoteContext.Provider>
     )
