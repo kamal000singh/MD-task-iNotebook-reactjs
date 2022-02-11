@@ -6,9 +6,9 @@ import noteContext from '../contextAPI/Notes/noteContext';
 
 const Home = () => {
     const { alert } = useContext(noteContext);
-    console.log(alert);
     return (
         <>
+
             <Alert alert={alert} />
             <div className="container">
                 <AddNote />

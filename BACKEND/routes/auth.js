@@ -59,6 +59,7 @@ router.post('/createuser', [
     body('email', "Enter valid email address").isEmail(),
     body('password', "password must be at least 5 characters").isLength({ min: 5 }),],
     async (req, res) => {
+        let success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -66,7 +67,8 @@ router.post('/createuser', [
         try {
             let user = await User.findOne({ email: req.body.email });
             if (user) {
-                return res.status(400).json({ errorMessage: "Sorry this email id already exist in the database." });
+                success = false;
+                return res.status(400).json({ success: success, errors: "Sorry this email id already exist in the database." });
             }
             const salt = await bcrypt.genSalt(10);
             const securePassword = await bcrypt.hash(req.body.password, salt);
@@ -75,9 +77,16 @@ router.post('/createuser', [
                 email: req.body.email,
                 password: securePassword,
             })
-            res.json({ user })
+            const payload = {
+                user: {
+                    id: user.id
+                }
+            }
+            const jwtToken = jwt.sign(payload, process.env.JWT_SECRET_TOKEN);
+            success = true;
+            res.json({ success: success, authToken: jwtToken })
         } catch (error) {
-            res.status(error.status || 500).json({ errorMessage: "Some error occurred" })
+            res.status(error.status || 500).json({ errors: "Some error occurred" })
         }
     })
 
