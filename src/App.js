@@ -7,12 +7,25 @@ import NoteState from './contextAPI/Notes/NoteState';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import Alert from './components/Alert';
+import { useState } from 'react';
 function App() {
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message, type) => {
+    setAlert({
+      msg: message,
+      type: type
+    })
+    setTimeout(() => {
+      setAlert(null);
+    }, 2000);
+  }
   return (
     <>
-      <NoteState>
+      <NoteState showAlert={showAlert}>
         <BrowserRouter>
           <Navbar />
+          <Alert alert={alert} />
           <div className="container p-5">
             <Routes>
               <Route path="/" element={<Home />} />

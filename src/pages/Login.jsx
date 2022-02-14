@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import noteContext from '../contextAPI/Notes/noteContext';
 // import { useHistory, useLocation } from "react-router-dom";
 
 const Login = () => {
+    const { showAlert } = useContext(noteContext);
     const [login, setLogin] = useState({ email: '', password: '' })
     let navigate = useNavigate();
     const handleChange = (e) => {
@@ -20,13 +22,12 @@ const Login = () => {
         })
         const json = await response.json();
         if (json.success) {
-            localStorage.setItem("authToken", json.authToken);
+            localStorage.setItem("token", json.authToken);
             navigate("/");
         }
         else {
-            alert(`Failed to login, ${json.error}`);
+            showAlert(`Failed to login, ${json.error}`, 'danger');
         }
-        console.log(json);
     }
     return (
         <>

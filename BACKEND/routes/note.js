@@ -2,15 +2,16 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Note = require('../models/Notes');
+const User = require('../models/User');
 const fetchuser = require('../middleware/fetchuser');
 
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
     try {
-        const notes = await Note.find({ user: req.user.id });
-        if (!notes) {
+        const notes_res = await Note.find({ user: req.user.id });
+        if (!notes_res) {
             res.status(404);
         }
-        res.json(notes);
+        res.json(notes_res);
     } catch (error) {
         res.status(error.status || 500).json({ errorMessage: "Internal server error" })
     }
