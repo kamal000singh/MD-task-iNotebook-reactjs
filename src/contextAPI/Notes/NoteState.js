@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import NoteContext from './noteContext'
-const url = 'http://localhost:5000/api/v1';
+const url = 'http://localhost:5000';
 const NoteState = (props) => {
     const { showAlert } = props;
     const [notes, setNotes] = useState([]);
