@@ -1,16 +1,20 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import noteContext from '../contextAPI/Notes/noteContext';
 
 const Navbar = () => {
     const { user, fetchUser } = useContext(noteContext);
+    const [isLoading, setIsLoading] = useState(false);
     let location = useLocation();
     const handlelogout = () => {
         localStorage.removeItem('token');
     }
     useEffect(() => {
-        fetchUser();
-    }, [fetchUser])
+        setIsLoading(true);
+        localStorage.getItem('token') && fetchUser();
+        setIsLoading(false);
+    }, [fetchUser]);
+
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -28,7 +32,10 @@ const Navbar = () => {
                                 <Link className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} to="/about">About</Link>
                             </li>
                         </ul>
-                        {localStorage.getItem('token') && <div className="text-light me-4">{user.name}</div>}
+                        {localStorage.getItem('token') &&
+                            isLoading ? <div className="text-light me-4">loading....</div> :
+                            <div className="text-light me-4">{user.name}</div>
+                        }
                         {localStorage.getItem('token') ? <button className="btn btn-success me-4" onClick={handlelogout} >Logout</button> : <form className="d-flex me-5">
                             <Link className={`btn btn-primary me-1`} to="/login">Login</Link>
                             <Link className={`btn btn-success`} to="/addNewUser">Register New User</Link>

@@ -4,12 +4,21 @@ import NoteElement from '../components/NoteElement';
 import { useNavigate } from 'react-router-dom';
 
 const ViewNotes = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const Navigate = useNavigate();
     const { notes, getNotes } = useContext(noteContext);
+
     useEffect(() => {
-        if (localStorage.getItem('token')) { getNotes() }
-        else { Navigate("/login") }
-    }, [getNotes, Navigate]);
+        setIsLoading(true);
+        if (localStorage.getItem('token')) {
+            getNotes()
+            setIsLoading(false);
+        }
+        else {
+            Navigate("/login")
+            setIsLoading(false);
+        }
+    }, [getNotes, Navigate, setIsLoading]);
     const { updateNote } = useContext(noteContext);
     const [unote, setUnote] = useState({ id: '', title: '', description: '', tag: 'default', })
     const handleChange = (e) => {
@@ -61,13 +70,13 @@ const ViewNotes = () => {
             </div>
         </div>
 
-        <div className='mt-5'>
+        {isLoading ? "loading..." : <div className='mt-5'>
             <h1>Your Notes</h1>
             <div className="row">
                 <div className='container fs-4 text-secondary'>{notes.length === 0 && "No notes available yet..."}</div>
                 {notes.map((item, index) => { return (<NoteElement key={index} handleUpdate={handleUpdate} note={item} />); })}
             </div>
-        </div>
+        </div>}
     </>
     )
 }

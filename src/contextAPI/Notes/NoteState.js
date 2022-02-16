@@ -5,7 +5,9 @@ const NoteState = (props) => {
     const { showAlert } = props;
     const [notes, setNotes] = useState([]);
     const [user, setUser] = useState([]);
+
     const getNotes = async () => {
+        // setIsLoading(true);
         const response = await fetch(`${url}/note/fetchallnotes`, {
             method: 'GET',
             headers: {
@@ -14,9 +16,11 @@ const NoteState = (props) => {
             },
         });
         const json = await response.json();
+        // setIsLoading(false);
         setNotes(json);
     }
     const fetchUser = async () => {
+        // setIsLoading(true);
         const response = await fetch(`${url}/auth/fetchuser`, {
             method: 'GET',
             headers: {
@@ -25,8 +29,8 @@ const NoteState = (props) => {
             }
         });
         const json = await response.json();
-        setUser(json);
-        console.log(json);
+        // setIsLoading(false);
+        await setUser(json);
     }
     const addNewNote = async (newNote) => {
         await fetch(`${url}/note/addnote`, {

@@ -26,7 +26,7 @@ function App() {
         <BrowserRouter>
           <Navbar />
           <Alert alert={alert} />
-          <div className="container p-5">
+          <div className="container mt-3 p-5">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
